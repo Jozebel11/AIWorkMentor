@@ -4,27 +4,7 @@ import { Breadcrumb } from "@/components/ui/breadcrumb"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { Clock } from "lucide-react"
 import Link from "next/link"
-import type { Job } from "@/lib/data/jobs"
-
-interface UseCase {
-  id: string
-  jobId: string
-  title: string
-  description: string
-  difficulty: string
-  timeEstimate: string
-  tools: string[]
-  steps?: Array<{
-    title: string
-    content: string
-  }>
-}
-
-interface Tool {
-  id: string
-  name: string
-  description: string
-}
+import type { Job, UseCase, Tool } from "@/lib/database/supabase"
 
 interface UseCaseDetailsViewProps {
   job: Job
@@ -71,7 +51,7 @@ export default function UseCaseDetailsView({ job, useCase, tools, sidebarItems }
             </span>
             <span className="ml-2 inline-flex items-center text-sm text-muted-foreground">
               <Clock className="mr-1 h-4 w-4" />
-              {useCase.timeEstimate}
+              {useCase.time_estimate}
             </span>
           </div>
           

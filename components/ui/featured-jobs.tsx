@@ -6,17 +6,17 @@ import { JobCard } from "@/components/ui/job-card"
 import type { Job } from "@/lib/database/supabase"
 
 export function FeaturedJobs() {
-  const [featuredJobs, setFeaturedJobs] = useState<Job[]>([])
+  const [jobs, setJobs] = useState<Job[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadFeaturedJobs = async () => {
       try {
-        const jobs = await getFeaturedJobs(3)
-        setFeaturedJobs(jobs)
+        const featuredJobs = await getFeaturedJobs(3)
+        setJobs(featuredJobs)
       } catch (error) {
         console.error('Error loading featured jobs:', error)
-        setFeaturedJobs([])
+        setJobs([])
       } finally {
         setLoading(false)
       }
@@ -30,9 +30,9 @@ export function FeaturedJobs() {
       <section className="py-12 md:py-16">
         <div className="container">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold tracking-tight">Popular Professions</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Featured Professions</h2>
             <p className="mt-2 text-muted-foreground">
-              Start with these in-demand careers and discover how AI can accelerate your growth
+              Start with these popular career paths and discover how AI can transform your work
             </p>
           </div>
           
@@ -48,22 +48,18 @@ export function FeaturedJobs() {
     )
   }
 
-  if (featuredJobs.length === 0) {
-    return null
-  }
-  
   return (
     <section className="py-12 md:py-16">
       <div className="container">
         <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Popular Professions</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Featured Professions</h2>
           <p className="mt-2 text-muted-foreground">
-            Start with these in-demand careers and discover how AI can accelerate your growth
+            Start with these popular career paths and discover how AI can transform your work
           </p>
         </div>
         
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredJobs.map((job) => (
+          {jobs.map((job) => (
             <JobCard
               key={job.id}
               id={job.id}

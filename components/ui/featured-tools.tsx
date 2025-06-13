@@ -10,24 +10,26 @@ export function FeaturedTools() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const loadTools = async () => {
+    const loadFeaturedTools = async () => {
       try {
         const allTools = await getAllTools()
-        setTools(allTools.slice(0, 6)) // Show first 6 tools
+        // Get first 6 tools as featured
+        const featuredTools = allTools.slice(0, 6)
+        setTools(featuredTools)
       } catch (error) {
-        console.error('Error loading tools:', error)
+        console.error('Error loading featured tools:', error)
         setTools([])
       } finally {
         setLoading(false)
       }
     }
 
-    loadTools()
+    loadFeaturedTools()
   }, [])
 
   if (loading) {
     return (
-      <section className="bg-muted/40 py-12 md:py-16">
+      <section className="py-12 md:py-16 bg-muted/30">
         <div className="container">
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold tracking-tight">Essential AI Tools</h2>
@@ -47,13 +49,9 @@ export function FeaturedTools() {
       </section>
     )
   }
-  
-  if (tools.length === 0) {
-    return null
-  }
-  
+
   return (
-    <section className="bg-muted/40 py-12 md:py-16">
+    <section className="py-12 md:py-16 bg-muted/30">
       <div className="container">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold tracking-tight">Essential AI Tools</h2>

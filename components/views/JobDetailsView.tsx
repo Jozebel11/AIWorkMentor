@@ -8,21 +8,10 @@ import { CopyButton } from "@/components/ui/copy-button"
 import { UseCaseCard } from "@/components/ui/use-case-card"
 import { Breadcrumb } from "@/components/ui/breadcrumb"
 import { SubscriptionGate } from "@/components/subscription/SubscriptionGate"
-import { PremiumBadge } from "@/components/subscription/PremiumBadge"
-import type { Job } from "@/lib/data/jobs"
-
-interface UseCase {
-  id: string
-  jobId: string
-  title: string
-  description: string
-  difficulty: string
-  timeEstimate: string
-  tools: string[]
-}
+import type { Job, UseCase, JobPromptStructure } from "@/lib/database/supabase"
 
 interface JobDetailsViewProps {
-  job: Job
+  job: Job & { promptStructures?: JobPromptStructure[] }
   useCases: UseCase[]
   additionalResources: Array<{
     title: string
@@ -111,7 +100,7 @@ export default function JobDetailsView({ job, useCases, additionalResources }: J
                 title={useCase.title}
                 description={useCase.description}
                 difficulty={useCase.difficulty}
-                timeEstimate={useCase.timeEstimate}
+                timeEstimate={useCase.time_estimate}
                 tools={useCase.tools}
               />
             </SubscriptionGate>
@@ -133,7 +122,7 @@ export default function JobDetailsView({ job, useCases, additionalResources }: J
             <div className="grid gap-8 lg:grid-cols-2">
               {job.promptStructures.map((prompt, index) => (
                 <SubscriptionGate
-                  key={index}
+                  key={prompt.id}
                   requiresPremium={index > 0}
                   fallback={
                     <Card className="relative border-dashed border-2 border-muted">
@@ -142,7 +131,9 @@ export default function JobDetailsView({ job, useCases, additionalResources }: J
                           <div>
                             <CardTitle className="text-lg mb-2 flex items-center gap-2">
                               {prompt.title}
-                              <PremiumBadge />
+                              <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+                                Premium
+                              </Badge>
                             </CardTitle>
                             <CardDescription className="text-sm">
                               {prompt.description}

@@ -9,7 +9,8 @@ import { ToolCard } from "@/components/ui/tool-card"
 import { UseCaseCard } from "@/components/ui/use-case-card"
 import { getAllJobs } from "@/lib/data/jobs"
 import { getAllTools } from "@/lib/data/tools"
-import { useCases } from "@/lib/data/use-cases"
+import { getUseCasesByJobId } from "@/lib/data/use-cases"
+import type { Job, Tool, UseCase } from "@/lib/database/supabase"
 
 function SearchResults() {
   const searchParams = useSearchParams()
@@ -17,14 +18,44 @@ function SearchResults() {
   const query = searchParams.get("q") || ""
   const [searchValue, setSearchValue] = useState(query)
   const [activeTab, setActiveTab] = useState("all")
-  
-  const jobs = getAllJobs()
-  const tools = getAllTools()
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [tools, setTools] = useState<Tool[]>([])
+  const [useCases, setUseCases] = useState<UseCase[]>([])
+  const [loading, setLoading] = useState(true)
   
   // Update search value when URL changes
   useEffect(() => {
     setSearchValue(query)
   }, [query])
+
+  // Load data on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [jobsData, toolsData] = await Promise.all([
+          getAllJobs(),
+          getAllTools()
+        ])
+        
+        setJobs(jobsData)
+        setTools(toolsData)
+        
+        // Load use cases for all jobs
+        const allUseCases: UseCase[] = []
+        for (const job of jobsData) {
+          const jobUseCases = await getUseCasesByJobId(job.id)
+          allUseCases.push(...jobUseCases)
+        }
+        setUseCases(allUseCases)
+      } catch (error) {
+        console.error('Error loading search data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
   
   // Filter based on search query
   const filteredJobs = jobs.filter(job => 
@@ -54,6 +85,34 @@ function SearchResults() {
     } else {
       router.push('/search')
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="container py-8">
+        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Search</h1>
+        <p className="mt-2 text-muted-foreground">
+          Loading search data...
+        </p>
+        
+        <div className="mt-6 max-w-md">
+          <SearchBar 
+            placeholder="Search jobs, tools, or use cases..." 
+            value={searchValue}
+            onChange={handleSearch}
+            fullWidth
+          />
+        </div>
+        
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="rounded-lg border bg-muted h-48"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
   
   if (!query) {
@@ -132,7 +191,7 @@ function SearchResults() {
                           id={job.id}
                           title={job.title}
                           description={job.description}
-                          useCaseCount={job.useCaseCount}
+                          useCaseCount={job.use_case_count}
                           image={job.image}
                           tags={job.tags}
                         />
@@ -188,11 +247,11 @@ function SearchResults() {
                         <UseCaseCard
                           key={useCase.id}
                           id={useCase.id}
-                          jobId={useCase.jobId}
+                          jobId={useCase.job_id}
                           title={useCase.title}
                           description={useCase.description}
                           difficulty={useCase.difficulty}
-                          timeEstimate={useCase.timeEstimate}
+                          timeEstimate={useCase.time_estimate}
                           tools={useCase.tools}
                         />
                       ))}
@@ -235,7 +294,7 @@ function SearchResults() {
                     id={job.id}
                     title={job.title}
                     description={job.description}
-                    useCaseCount={job.useCaseCount}
+                    useCaseCount={job.use_case_count}
                     image={job.image}
                     tags={job.tags}
                   />
@@ -273,11 +332,11 @@ function SearchResults() {
                   <UseCaseCard
                     key={useCase.id}
                     id={useCase.id}
-                    jobId={useCase.jobId}
+                    jobId={useCase.job_id}
                     title={useCase.title}
                     description={useCase.description}
                     difficulty={useCase.difficulty}
-                    timeEstimate={useCase.timeEstimate}
+                    timeEstimate={useCase.time_estimate}
                     tools={useCase.tools}
                   />
                 ))}
