@@ -32,7 +32,7 @@ export function FeaturedJobs() {
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold tracking-tight">Featured Professions</h2>
             <p className="mt-2 text-muted-foreground">
-              Start with these popular career paths and discover how AI can transform your work
+              Popular AI use cases for different careers
             </p>
           </div>
           
@@ -54,7 +54,7 @@ export function FeaturedJobs() {
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold tracking-tight">Featured Professions</h2>
           <p className="mt-2 text-muted-foreground">
-            Start with these popular career paths and discover how AI can transform your work
+            Popular AI use cases for different careers
           </p>
         </div>
         
