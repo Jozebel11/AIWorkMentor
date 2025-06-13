@@ -11,11 +11,13 @@ A comprehensive platform helping professionals master AI tools for career growth
 - **Microsoft/Outlook** for enterprise users
 - **Secure session management** with NextAuth.js
 
-### 💳 **Subscription System**
+### 💳 **RevenueCat Subscription System**
 - **Free Tier**: Access to basic content (1 prompt example, 1 guide per job)
 - **Premium Tier**: Unlimited access to all content and features
 - **RevenueCat Integration** for secure payment processing
 - **Content Gating** based on subscription status
+- **Restore Purchases** functionality
+- **Real-time subscription status updates**
 
 ### 📝 **Feedback & Review System**
 - **Multi-type feedback**: Reviews, issues, content requests, feature requests, bug reports
@@ -52,7 +54,7 @@ A comprehensive platform helping professionals master AI tools for career growth
 - **Backend**: Next.js API Routes, NextAuth.js
 - **Database**: MongoDB with Mongoose
 - **Authentication**: NextAuth.js with multiple providers
-- **Payments**: RevenueCat integration
+- **Payments**: RevenueCat integration with @revenuecat/purchases-js
 - **CMS**: HubSpot integration for feedback management
 - **UI Components**: shadcn/ui with Radix UI
 - **Styling**: Tailwind CSS with custom design system
@@ -63,7 +65,7 @@ A comprehensive platform helping professionals master AI tools for career growth
 - Node.js 18+ 
 - MongoDB database
 - OAuth provider credentials (Google, Apple, Microsoft)
-- RevenueCat account
+- RevenueCat account with configured products
 - HubSpot account with API access
 
 ### **Installation**
@@ -90,6 +92,7 @@ NEXTAUTH_SECRET=your-secure-random-secret
 MONGODB_URI=mongodb://localhost:27017/thrivewith-ai
 
 # RevenueCat
+NEXT_PUBLIC_REVENUECAT_PUBLIC_KEY=your-revenuecat-public-key
 REVENUECAT_SECRET_KEY=your-revenuecat-secret-key
 
 # HubSpot CMS Integration
@@ -125,6 +128,47 @@ npm run dev
 
 Visit `http://localhost:3000` to see the application.
 
+## 💳 **RevenueCat Setup**
+
+### **1. Create RevenueCat Account**
+1. Sign up at [RevenueCat](https://www.revenuecat.com/)
+2. Create a new project
+3. Add your app (Web platform)
+
+### **2. Configure Products**
+1. Go to Products tab in RevenueCat dashboard
+2. Create products:
+   - **Product ID**: `premium_monthly`
+   - **Type**: Subscription
+   - **Duration**: 1 month
+   - **Price**: $19.99 (or your preferred price)
+
+   - **Product ID**: `premium_yearly` (optional)
+   - **Type**: Subscription  
+   - **Duration**: 1 year
+   - **Price**: $199.99 (or your preferred price)
+
+### **3. Configure Entitlements**
+1. Go to Entitlements tab
+2. Create entitlement:
+   - **Entitlement ID**: `premium`
+   - **Products**: Add both monthly and yearly products
+
+### **4. Get API Keys**
+1. Go to API Keys tab
+2. Copy your **Public Key** → `NEXT_PUBLIC_REVENUECAT_PUBLIC_KEY`
+3. Copy your **Secret Key** → `REVENUECAT_SECRET_KEY`
+
+### **5. Configure Webhooks**
+1. Go to Integrations → Webhooks
+2. Add webhook URL: `https://yourdomain.com/api/subscription/webhook`
+3. Select events: `INITIAL_PURCHASE`, `RENEWAL`, `CANCELLATION`, `EXPIRATION`
+
+### **6. Test Configuration**
+1. Use RevenueCat's test mode for development
+2. Test purchases with sandbox accounts
+3. Verify webhook delivery in RevenueCat dashboard
+
 ## 🔧 **HubSpot Setup**
 
 ### **Create Private App**
@@ -137,8 +181,6 @@ Visit `http://localhost:3000` to see the application.
    - `crm.objects.tickets.write`
    - `crm.objects.notes.read`
    - `crm.objects.notes.write`
-   - `crm.objects.custom.read` (if using custom objects)
-   - `crm.objects.custom.write` (if using custom objects)
 
 ### **Configure Pipelines**
 1. Go to Settings → Objects → Tickets
@@ -147,15 +189,6 @@ Visit `http://localhost:3000` to see the application.
    - In Progress
    - Waiting on Customer
    - Closed
-
-### **Custom Properties (Optional)**
-Create custom properties for better feedback tracking:
-- `feedback_type` (dropdown)
-- `feedback_category` (dropdown)
-- `customer_rating` (number)
-- `related_page` (single-line text)
-- `related_job` (single-line text)
-- `related_tool` (single-line text)
 
 ## 🔧 **OAuth Provider Setup**
 
@@ -178,13 +211,6 @@ Create custom properties for better feedback tracking:
 3. Configure authentication and permissions
 4. Add redirect URI: `http://localhost:3000/api/auth/callback/azure-ad`
 
-## 💳 **RevenueCat Setup**
-
-1. Create account at [RevenueCat](https://www.revenuecat.com/)
-2. Set up your app and products
-3. Configure webhook endpoint: `https://yourdomain.com/api/subscription/webhook`
-4. Add API keys to environment variables
-
 ## 📧 **Email Configuration**
 
 ### **Gmail Setup**
@@ -195,12 +221,6 @@ Create custom properties for better feedback tracking:
    - Generate password for "Mail"
 3. Use the app password in `SMTP_PASSWORD`
 
-### **Other Email Providers**
-The system supports any SMTP provider. Update the SMTP settings accordingly:
-- **SendGrid**: `smtp.sendgrid.net:587`
-- **Mailgun**: `smtp.mailgun.org:587`
-- **AWS SES**: `email-smtp.region.amazonaws.com:587`
-
 ## 🔒 **Security Features**
 
 ### **Authentication Security**
@@ -209,17 +229,17 @@ The system supports any SMTP provider. Update the SMTP settings accordingly:
 - Secure session management with JWT
 - OAuth integration with major providers
 
+### **Subscription Security**
+- Webhook signature verification
+- Secure payment processing through RevenueCat
+- No direct credit card handling
+- Real-time subscription status synchronization
+
 ### **Data Protection**
 - Input validation with Zod schemas
 - SQL injection prevention through Mongoose
 - XSS protection through React
 - CSRF protection with NextAuth.js
-
-### **Subscription Security**
-- Webhook signature verification
-- Secure payment processing through RevenueCat
-- No direct credit card handling
-- Subscription status synchronization
 
 ## 📁 **Project Structure**
 
@@ -228,7 +248,7 @@ The system supports any SMTP provider. Update the SMTP settings accordingly:
 │   ├── api/               # API routes
 │   │   ├── auth/          # Authentication endpoints
 │   │   ├── feedback/      # Feedback management
-│   │   └── subscription/  # Subscription webhooks
+│   │   └── subscription/  # Subscription webhooks & updates
 │   ├── auth/              # Authentication pages
 │   ├── admin/             # Admin dashboard
 │   ├── jobs/              # Job-specific pages
@@ -255,30 +275,23 @@ The system supports any SMTP provider. Update the SMTP settings accordingly:
 └── types/                 # TypeScript type definitions
 ```
 
-## 📝 **Feedback System Features**
+## 💳 **Subscription Flow**
 
-### **User Features**
-- **Multi-type feedback**: Reviews, issues, content requests, feature requests, bug reports
-- **Star ratings** for reviews
-- **Priority levels** for issues
-- **Context awareness** (auto-fills current page, job, tool)
-- **Public/private** review options
-- **Email confirmations** and updates
+### **User Journey**
+1. User visits upgrade page
+2. RevenueCat loads available products
+3. User selects subscription plan
+4. RevenueCat handles payment processing
+5. Webhook updates user subscription status
+6. User gains immediate access to premium content
 
-### **Admin Features**
-- **Comprehensive dashboard** with statistics
-- **Response management** with email notifications
-- **Status tracking** (pending → in_review → resolved)
-- **HubSpot integration** for CRM management
-- **Bulk actions** and filtering
-- **Internal notes** for team collaboration
-
-### **HubSpot Integration**
-- **Contact management**: Creates/updates contacts automatically
-- **Ticket creation**: Each feedback becomes a support ticket
-- **Pipeline tracking**: Moves through support stages
-- **Notes and responses**: Synced between systems
-- **Custom properties**: Enhanced tracking and reporting
+### **Technical Flow**
+1. `RevenueCatProvider` initializes with user ID
+2. `SubscriptionPlans` component displays available packages
+3. `PurchaseButton` triggers RevenueCat purchase flow
+4. Purchase completion updates local state
+5. API call updates database subscription status
+6. UI refreshes to show premium access
 
 ## 🚀 **Deployment**
 
@@ -287,6 +300,8 @@ The system supports any SMTP provider. Update the SMTP settings accordingly:
 NEXTAUTH_URL=https://yourdomain.com
 NEXTAUTH_SECRET=your-production-secret
 MONGODB_URI=your-production-mongodb-uri
+NEXT_PUBLIC_REVENUECAT_PUBLIC_KEY=your-production-revenuecat-public-key
+REVENUECAT_SECRET_KEY=your-production-revenuecat-secret-key
 HUBSPOT_ACCESS_TOKEN=your-production-hubspot-token
 # ... other production credentials
 ```
