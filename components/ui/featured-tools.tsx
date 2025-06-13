@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ToolCard } from "@/components/ui/tool-card"
 import { getAllTools } from "@/lib/data/tools"
+import { ToolCard } from "@/components/ui/tool-card"
 import type { Tool } from "@/lib/database/supabase"
 
 export function FeaturedTools() {
@@ -32,7 +32,7 @@ export function FeaturedTools() {
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold tracking-tight">Essential AI Tools</h2>
             <p className="mt-2 text-muted-foreground">
-              Discover the most powerful AI tools to enhance your productivity
+              Discover the most powerful AI tools that professionals use to enhance their productivity
             </p>
           </div>
           
@@ -48,13 +48,17 @@ export function FeaturedTools() {
     )
   }
   
+  if (tools.length === 0) {
+    return null
+  }
+  
   return (
     <section className="bg-muted/40 py-12 md:py-16">
       <div className="container">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold tracking-tight">Essential AI Tools</h2>
           <p className="mt-2 text-muted-foreground">
-            Discover the most powerful AI tools to enhance your productivity
+            Discover the most powerful AI tools that professionals use to enhance their productivity
           </p>
         </div>
         

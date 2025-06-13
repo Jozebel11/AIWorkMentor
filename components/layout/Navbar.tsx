@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { MoonIcon, SunIcon, Menu, User, Settings, LogOut, Crown } from 'lucide-react'
+import { MoonIcon, SunIcon, Menu, User, Settings, LogOut } from 'lucide-react'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -23,7 +23,6 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { PremiumBadge } from '@/components/subscription/PremiumBadge'
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false)
@@ -37,9 +36,6 @@ export default function Navbar() {
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }
-
-  const isPremium = session?.user?.subscriptionTier === 'premium' && 
-                   session?.user?.subscriptionStatus === 'active'
 
   const getUserInitials = (name?: string | null) => {
     if (!name) return 'U'
@@ -130,7 +126,6 @@ export default function Navbar() {
                     <p className="w-[200px] truncate text-sm text-muted-foreground">
                       {session.user?.email}
                     </p>
-                    {isPremium && <PremiumBadge className="w-fit" />}
                   </div>
                 </div>
                 <DropdownMenuSeparator />
@@ -146,14 +141,6 @@ export default function Navbar() {
                     Settings
                   </Link>
                 </DropdownMenuItem>
-                {!isPremium && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/subscription/upgrade">
-                      <Crown className="mr-2 h-4 w-4" />
-                      Upgrade to Premium
-                    </Link>
-                  </DropdownMenuItem>
-                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />

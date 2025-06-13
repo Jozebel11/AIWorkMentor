@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { JobCard } from "@/components/ui/job-card"
 import { getFeaturedJobs } from "@/lib/data/jobs"
+import { JobCard } from "@/components/ui/job-card"
 import type { Job } from "@/lib/database/supabase"
 
 export function FeaturedJobs() {
@@ -30,9 +30,9 @@ export function FeaturedJobs() {
       <section className="py-12 md:py-16">
         <div className="container">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold tracking-tight">Featured Professions</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Popular Professions</h2>
             <p className="mt-2 text-muted-foreground">
-              Start your AI journey with these popular career paths
+              Start with these in-demand careers and discover how AI can accelerate your growth
             </p>
           </div>
           
@@ -48,13 +48,17 @@ export function FeaturedJobs() {
     )
   }
 
+  if (featuredJobs.length === 0) {
+    return null
+  }
+  
   return (
     <section className="py-12 md:py-16">
       <div className="container">
         <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Featured Professions</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Popular Professions</h2>
           <p className="mt-2 text-muted-foreground">
-            Start your AI journey with these popular career paths
+            Start with these in-demand careers and discover how AI can accelerate your growth
           </p>
         </div>
         

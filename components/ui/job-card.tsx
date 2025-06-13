@@ -1,8 +1,8 @@
 import Link from "next/link"
 import Image from "next/image"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight } from "lucide-react"
+import { Briefcase } from "lucide-react"
 
 interface JobCardProps {
   id: string
@@ -14,7 +14,15 @@ interface JobCardProps {
   featured?: boolean
 }
 
-export function JobCard({ id, title, description, useCaseCount, image, tags, featured }: JobCardProps) {
+export function JobCard({
+  id,
+  title,
+  description,
+  useCaseCount,
+  image,
+  tags,
+  featured
+}: JobCardProps) {
   return (
     <Link href={`/jobs/${id}`}>
       <Card className={`h-full overflow-hidden transition-all hover:shadow-md ${featured ? 'border-primary/50' : ''}`}>
@@ -26,35 +34,32 @@ export function JobCard({ id, title, description, useCaseCount, image, tags, fea
             className="object-cover"
           />
           {featured && (
-            <div className="absolute right-2 top-2">
+            <div className="absolute top-2 right-2">
               <Badge className="bg-primary text-primary-foreground">
                 Featured
               </Badge>
             </div>
           )}
         </div>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl">{title}</CardTitle>
+          <CardDescription className="line-clamp-2">
+            {description}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
+          <div className="flex flex-wrap gap-2 mb-4">
+            {tags.slice(0, 3).map((tag) => (
+              <Badge key={tag} variant="secondary" className="text-xs">
                 {tag}
               </Badge>
             ))}
           </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <Briefcase className="mr-1 h-4 w-4" />
+            <span>{useCaseCount} use case{useCaseCount !== 1 ? 's' : ''}</span>
+          </div>
         </CardContent>
-        <CardFooter className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">
-            {useCaseCount} use case{useCaseCount !== 1 ? 's' : ''}
-          </span>
-          <span className="flex items-center text-sm font-medium text-primary">
-            View details
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </span>
-        </CardFooter>
       </Card>
     </Link>
   )
