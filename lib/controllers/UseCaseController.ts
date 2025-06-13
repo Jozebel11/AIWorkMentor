@@ -1,19 +1,21 @@
-import { getUseCaseByJobAndId } from "@/lib/data/use-cases"
-import { getJobById } from "@/lib/data/jobs"
-import { getToolById } from "@/lib/data/tools"
+import { getUseCaseByJobAndId } from "@/lib/data/use-cases-new"
+import { getJobById } from "@/lib/data/jobs-new"
+import { getToolById } from "@/lib/data/tools-new"
 
 export class UseCaseController {
   static async getUseCaseDetails(jobId: string, useCaseId: string) {
     try {
-      const job = getJobById(jobId)
-      const useCase = getUseCaseByJobAndId(jobId, useCaseId)
+      const job = await getJobById(jobId)
+      const useCase = await getUseCaseByJobAndId(jobId, useCaseId)
       
       if (!job || !useCase) {
         return { job: null, useCase: null, tools: [], sidebarItems: [] }
       }
 
       // Get tool information
-      const tools = useCase.tools.map(toolId => getToolById(toolId)).filter(Boolean)
+      const toolPromises = useCase.tools.map(toolId => getToolById(toolId))
+      const toolResults = await Promise.all(toolPromises)
+      const tools = toolResults.filter(Boolean)
       
       // Create sidebar items from steps
       const sidebarItems = [

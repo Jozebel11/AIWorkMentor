@@ -1,15 +1,15 @@
-import { getJobById } from "@/lib/data/jobs"
-import { getUseCasesByJobId } from "@/lib/data/use-cases"
+import { getJobById } from "@/lib/data/jobs-new"
+import { getUseCasesByJobId } from "@/lib/data/use-cases-new"
 
 export class JobController {
   static async getJobDetails(jobId: string) {
     try {
-      const job = getJobById(jobId)
+      const job = await getJobById(jobId)
       if (!job) {
         return { job: null, useCases: [], additionalResources: [] }
       }
 
-      const useCases = getUseCasesByJobId(job.id)
+      const useCases = await getUseCasesByJobId(job.id)
       const additionalResources = this.getAdditionalResources(job.id)
 
       return {

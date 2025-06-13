@@ -1,14 +1,15 @@
-import { getToolById, getAllTools } from "@/lib/data/tools"
+import { getToolById, getAllTools } from "@/lib/data/tools-new"
 
 export class ToolController {
   static async getToolDetails(toolId: string) {
     try {
-      const tool = getToolById(toolId)
+      const tool = await getToolById(toolId)
       if (!tool) {
         return { tool: null, relatedTools: [] }
       }
 
-      const relatedTools = getAllTools()
+      const allTools = await getAllTools()
+      const relatedTools = allTools
         .filter(t => t.category === tool.category && t.id !== tool.id)
         .slice(0, 3)
 
