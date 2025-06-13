@@ -1,9 +1,8 @@
-"use client"
-
 import Link from "next/link"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowRight } from "lucide-react"
 
 interface JobCardProps {
   id: string
@@ -15,50 +14,48 @@ interface JobCardProps {
   featured?: boolean
 }
 
-export function JobCard({
-  id,
-  title,
-  description,
-  useCaseCount,
-  image,
-  tags,
-  featured = false
-}: JobCardProps) {
+export function JobCard({ id, title, description, useCaseCount, image, tags, featured }: JobCardProps) {
   return (
-    <Card className={`group transition-all hover:shadow-lg ${featured ? 'ring-2 ring-primary/20' : ''}`}>
-      <Link href={`/jobs/${id}`} className="block">
-        <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
+    <Link href={`/jobs/${id}`}>
+      <Card className={`h-full overflow-hidden transition-all hover:shadow-md ${featured ? 'border-primary/50' : ''}`}>
+        <div className="relative h-48 w-full">
           <Image
             src={image}
             alt={title}
             fill
-            className="object-cover transition-transform group-hover:scale-105"
+            className="object-cover"
           />
           {featured && (
-            <div className="absolute top-2 right-2">
-              <Badge className="bg-primary text-primary-foreground">Featured</Badge>
+            <div className="absolute right-2 top-2">
+              <Badge className="bg-primary text-primary-foreground">
+                Featured
+              </Badge>
             </div>
           )}
         </div>
         <CardHeader>
-          <CardTitle className="text-xl">{title}</CardTitle>
+          <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">
-              {useCaseCount} use cases
-            </span>
-          </div>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs">
+              <Badge key={tag} variant="secondary">
                 {tag}
               </Badge>
             ))}
           </div>
         </CardContent>
-      </Link>
-    </Card>
+        <CardFooter className="flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">
+            {useCaseCount} use case{useCaseCount !== 1 ? 's' : ''}
+          </span>
+          <span className="flex items-center text-sm font-medium text-primary">
+            View details
+            <ArrowRight className="ml-1 h-4 w-4" />
+          </span>
+        </CardFooter>
+      </Card>
+    </Link>
   )
 }

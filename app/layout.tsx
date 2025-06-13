@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AuthProvider } from '@/components/auth/AuthProvider'
-import { RevenueCatProvider } from '@/components/subscription/RevenueCatProvider'
 import { Toaster } from '@/components/ui/sonner'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -18,6 +17,7 @@ export const metadata: Metadata = {
   creator: 'ThriveWithAI',
   publisher: 'ThriveWithAI',
   robots: 'index, follow',
+  metadataBase: new URL('http://localhost:3000'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -60,21 +60,19 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AuthProvider>
-          <RevenueCatProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <div className="flex min-h-screen flex-col">
-                <Navbar />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-              <Toaster />
-            </ThemeProvider>
-          </RevenueCatProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="flex min-h-screen flex-col">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+            <Toaster />
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

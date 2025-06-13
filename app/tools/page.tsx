@@ -1,14 +1,32 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { getAllTools } from "@/lib/data/tools"
 import { ToolCard } from "@/components/ui/tool-card"
 import { SearchBar } from "@/components/ui/search-bar"
+import type { Tool } from "@/lib/database/supabase"
 
 export default function ToolsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
-  const allTools = getAllTools()
+  const [allTools, setAllTools] = useState<Tool[]>([])
+  const [loading, setLoading] = useState(true)
+  
+  useEffect(() => {
+    const loadTools = async () => {
+      try {
+        const tools = await getAllTools()
+        setAllTools(tools)
+      } catch (error) {
+        console.error('Error loading tools:', error)
+        setAllTools([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTools()
+  }, [])
   
   // Get unique categories for filtering
   const categories = [...new Set(allTools.map(tool => tool.category))]
@@ -23,6 +41,38 @@ export default function ToolsPage() {
     
     return matchesSearch && matchesCategory
   })
+
+  if (loading) {
+    return (
+      <div className="container py-8 md:py-12">
+        <div className="mx-auto max-w-xl text-center">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+            AI Tools Directory
+          </h1>
+          <p className="mt-4 text-muted-foreground">
+            Discover powerful AI tools that can transform your workflow and boost your productivity
+          </p>
+          <div className="mt-6">
+            <SearchBar 
+              placeholder="Search tools by name or category..." 
+              className="mx-auto" 
+              fullWidth 
+              value={searchQuery}
+              onChange={setSearchQuery}
+            />
+          </div>
+        </div>
+        
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="rounded-lg border bg-muted h-48"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
   
   return (
     <div className="container py-8 md:py-12">

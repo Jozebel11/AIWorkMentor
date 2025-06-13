@@ -1,15 +1,38 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { getAllGlossaryTerms, getGlossaryCategories } from "@/lib/data/glossary"
 import { SearchBar } from "@/components/ui/search-bar"
 import { Badge } from "@/components/ui/badge"
+import type { GlossaryTerm } from "@/lib/database/supabase"
 
 export default function GlossaryPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
-  const allTerms = getAllGlossaryTerms()
-  const categories = getGlossaryCategories()
+  const [allTerms, setAllTerms] = useState<GlossaryTerm[]>([])
+  const [categories, setCategories] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  
+  useEffect(() => {
+    const loadGlossaryData = async () => {
+      try {
+        const [terms, cats] = await Promise.all([
+          getAllGlossaryTerms(),
+          getGlossaryCategories()
+        ])
+        setAllTerms(terms)
+        setCategories(cats)
+      } catch (error) {
+        console.error('Error loading glossary data:', error)
+        setAllTerms([])
+        setCategories([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadGlossaryData()
+  }, [])
   
   // Filter terms based on search query and category
   const filteredTerms = allTerms.filter(term => {
@@ -20,6 +43,40 @@ export default function GlossaryPage() {
     
     return matchesSearch && matchesCategory
   })
+
+  if (loading) {
+    return (
+      <div className="container py-8 md:py-12">
+        <div className="mx-auto max-w-xl text-center">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+            AI Glossary
+          </h1>
+          <p className="mt-4 text-muted-foreground">
+            Master AI terminology and concepts to communicate confidently about artificial intelligence
+          </p>
+          <div className="mt-6">
+            <SearchBar 
+              placeholder="Search terms..." 
+              className="mx-auto" 
+              fullWidth 
+              value={searchQuery}
+              onChange={setSearchQuery}
+            />
+          </div>
+        </div>
+        
+        <div className="mt-12">
+          <div className="grid gap-8 md:grid-cols-2">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="rounded-lg border bg-muted h-32"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
   
   return (
     <div className="container py-8 md:py-12">
@@ -82,7 +139,7 @@ export default function GlossaryPage() {
       <div className="mt-12">
         <div className="grid gap-8 md:grid-cols-2">
           {filteredTerms.map((term) => (
-            <div key={term.term} className="group rounded-lg border p-6 transition-all hover:border-primary/50 hover:shadow-sm">
+            <div key={term.id} className="group rounded-lg border p-6 transition-all hover:border-primary/50 hover:shadow-sm">
               <div className="mb-1 flex items-center justify-between">
                 <h3 className="text-lg font-bold">{term.term}</h3>
                 <Badge variant="outline">{term.category}</Badge>

@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Loader2, Crown, Check } from 'lucide-react'
+import { Loader2, Crown } from 'lucide-react'
 import { useRevenueCat } from './RevenueCatProvider'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
