@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, CheckCircle } from "lucide-react"
+import { ExternalLink, CheckCircle, Crown } from "lucide-react"
 import { CopyButton } from "@/components/ui/copy-button"
 import { UseCaseCard } from "@/components/ui/use-case-card"
 import { Breadcrumb } from "@/components/ui/breadcrumb"
@@ -93,6 +93,46 @@ export default function JobDetailsView({ job, useCases, additionalResources }: J
               requiresPremium={index > 0}
               blurContent={index > 0}
               showUpgradePrompt={false}
+              fallback={
+                <Card className="relative border-dashed border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg mb-2 flex items-center gap-2">
+                          {useCase.title}
+                          <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+                            <Crown className="h-3 w-3 mr-1" />
+                            Premium
+                          </Badge>
+                        </CardTitle>
+                        <CardDescription className="text-sm">
+                          {useCase.description}
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Difficulty:</span>
+                        <Badge variant="outline">{useCase.difficulty}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Time:</span>
+                        <span>{useCase.time_estimate}</span>
+                      </div>
+                      <div className="pt-3 border-t">
+                        <Button asChild className="w-full">
+                          <Link href="/subscription/upgrade">
+                            <Crown className="mr-2 h-4 w-4" />
+                            Unlock Premium
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              }
             >
               <UseCaseCard
                 id={useCase.id}
@@ -125,13 +165,14 @@ export default function JobDetailsView({ job, useCases, additionalResources }: J
                   key={prompt.id}
                   requiresPremium={index > 0}
                   fallback={
-                    <Card className="relative border-dashed border-2 border-muted">
+                    <Card className="relative border-dashed border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div>
                             <CardTitle className="text-lg mb-2 flex items-center gap-2">
                               {prompt.title}
                               <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+                                <Crown className="h-3 w-3 mr-1" />
                                 Premium
                               </Badge>
                             </CardTitle>
@@ -154,6 +195,7 @@ export default function JobDetailsView({ job, useCases, additionalResources }: J
                           <div className="absolute inset-0 flex items-center justify-center">
                             <Button asChild>
                               <Link href="/subscription/upgrade">
+                                <Crown className="mr-2 h-4 w-4" />
                                 Unlock Premium
                               </Link>
                             </Button>
