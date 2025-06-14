@@ -48,6 +48,10 @@ export function FeaturedJobs() {
     )
   }
 
+  if (jobs.length === 0) {
+    return null
+  }
+
   return (
     <section className="py-12 md:py-16">
       <div className="container">

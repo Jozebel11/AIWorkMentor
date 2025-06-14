@@ -34,14 +34,14 @@ export function FeaturedTools() {
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold tracking-tight">Essential AI Tools</h2>
             <p className="mt-2 text-muted-foreground">
-              Discover the most powerful AI tools that professionals use to enhance their productivity
+              Powerful tools to enhance your productivity
             </p>
           </div>
           
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="rounded-lg border bg-background h-48"></div>
+                <div className="rounded-lg border bg-muted h-48"></div>
               </div>
             ))}
           </div>
@@ -50,13 +50,17 @@ export function FeaturedTools() {
     )
   }
 
+  if (tools.length === 0) {
+    return null
+  }
+
   return (
     <section className="py-12 md:py-16 bg-muted/30">
       <div className="container">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold tracking-tight">Essential AI Tools</h2>
           <p className="mt-2 text-muted-foreground">
-            Discover the most powerful AI tools that professionals use to enhance their productivity
+            Powerful tools to enhance your productivity
           </p>
         </div>
         
