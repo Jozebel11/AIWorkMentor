@@ -10,7 +10,7 @@ export function FeaturedJobs() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const loadFeaturedJobs = async () => {
+    const loadJobs = async () => {
       try {
         const featuredJobs = await getFeaturedJobs(3)
         setJobs(featuredJobs)
@@ -22,7 +22,7 @@ export function FeaturedJobs() {
       }
     }
 
-    loadFeaturedJobs()
+    loadJobs()
   }, [])
 
   if (loading) {
@@ -30,9 +30,9 @@ export function FeaturedJobs() {
       <section className="py-12 md:py-16">
         <div className="container">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold tracking-tight">Featured Professions</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Popular AI Career Guides</h2>
             <p className="mt-2 text-muted-foreground">
-              Popular AI use cases for different careers
+              Discover how AI can enhance your specific profession
             </p>
           </div>
           
@@ -56,9 +56,9 @@ export function FeaturedJobs() {
     <section className="py-12 md:py-16">
       <div className="container">
         <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Featured Professions</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Popular AI Career Guides</h2>
           <p className="mt-2 text-muted-foreground">
-            Popular AI use cases for different careers
+            Discover how AI can enhance your specific profession
           </p>
         </div>
         
@@ -75,6 +75,15 @@ export function FeaturedJobs() {
               featured={job.featured}
             />
           ))}
+        </div>
+        
+        <div className="mt-8 text-center">
+          <a
+            href="/jobs"
+            className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          >
+            View All Professions
+          </a>
         </div>
       </div>
     </section>

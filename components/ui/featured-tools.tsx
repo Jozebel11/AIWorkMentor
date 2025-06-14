@@ -10,21 +10,20 @@ export function FeaturedTools() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const loadFeaturedTools = async () => {
+    const loadTools = async () => {
       try {
         const allTools = await getAllTools()
-        // Get first 6 tools as featured
-        const featuredTools = allTools.slice(0, 6)
-        setTools(featuredTools)
+        // Just take the first 3 tools for featured section
+        setTools(allTools.slice(0, 3))
       } catch (error) {
-        console.error('Error loading featured tools:', error)
+        console.error('Error loading tools:', error)
         setTools([])
       } finally {
         setLoading(false)
       }
     }
 
-    loadFeaturedTools()
+    loadTools()
   }, [])
 
   if (loading) {
@@ -34,14 +33,14 @@ export function FeaturedTools() {
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold tracking-tight">Essential AI Tools</h2>
             <p className="mt-2 text-muted-foreground">
-              Powerful tools to enhance your productivity
+              Powerful AI tools to boost your productivity
             </p>
           </div>
           
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, i) => (
+            {[...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="rounded-lg border bg-muted h-48"></div>
+                <div className="rounded-lg border bg-background h-48"></div>
               </div>
             ))}
           </div>
@@ -60,7 +59,7 @@ export function FeaturedTools() {
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold tracking-tight">Essential AI Tools</h2>
           <p className="mt-2 text-muted-foreground">
-            Powerful tools to enhance your productivity
+            Powerful AI tools to boost your productivity
           </p>
         </div>
         
@@ -76,6 +75,15 @@ export function FeaturedTools() {
               url={tool.url}
             />
           ))}
+        </div>
+        
+        <div className="mt-8 text-center">
+          <a
+            href="/tools"
+            className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          >
+            Explore All Tools
+          </a>
         </div>
       </div>
     </section>

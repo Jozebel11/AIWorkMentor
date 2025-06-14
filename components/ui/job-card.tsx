@@ -1,8 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Briefcase } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface JobCardProps {
   id: string
@@ -14,15 +13,7 @@ interface JobCardProps {
   featured?: boolean
 }
 
-export function JobCard({
-  id,
-  title,
-  description,
-  useCaseCount,
-  image,
-  tags,
-  featured
-}: JobCardProps) {
+export function JobCard({ id, title, description, useCaseCount, image, tags, featured }: JobCardProps) {
   return (
     <Link href={`/jobs/${id}`}>
       <Card className={`h-full overflow-hidden transition-all hover:shadow-md ${featured ? 'border-primary/50' : ''}`}>
@@ -42,22 +33,21 @@ export function JobCard({
           )}
         </div>
         <CardHeader className="pb-2">
-          <CardTitle className="text-xl">{title}</CardTitle>
-          <CardDescription className="line-clamp-2">
-            {description}
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>
+            {useCaseCount} AI use case{useCaseCount !== 1 ? 's' : ''}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-2 mb-4">
+          <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+            {description}
+          </p>
+          <div className="flex flex-wrap gap-2">
             {tags.slice(0, 3).map((tag) => (
               <Badge key={tag} variant="secondary" className="text-xs">
                 {tag}
               </Badge>
             ))}
-          </div>
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Briefcase className="mr-1 h-4 w-4" />
-            <span>{useCaseCount} use case{useCaseCount !== 1 ? 's' : ''}</span>
           </div>
         </CardContent>
       </Card>

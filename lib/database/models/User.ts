@@ -37,8 +37,7 @@ const UserSchema = new Schema<IUser>({
     required: true,
     unique: true,
     lowercase: true,
-    trim: true,
-    index: true
+    trim: true
   },
   password: {
     type: String,
@@ -100,12 +99,12 @@ const UserSchema = new Schema<IUser>({
   timestamps: true
 })
 
-// Indexes for performance
-UserSchema.index({ email: 1 })
-UserSchema.index({ revenueCatUserId: 1 })
+// Remove duplicate indexes - only create them once
+UserSchema.index({ email: 1 }, { unique: true })
+UserSchema.index({ revenueCatUserId: 1 }, { unique: true, sparse: true })
 UserSchema.index({ subscriptionStatus: 1 })
-UserSchema.index({ 'oauth.google.id': 1 })
-UserSchema.index({ 'oauth.apple.id': 1 })
-UserSchema.index({ 'oauth.azure.id': 1 })
+UserSchema.index({ 'oauth.google.id': 1 }, { sparse: true })
+UserSchema.index({ 'oauth.apple.id': 1 }, { sparse: true })
+UserSchema.index({ 'oauth.azure.id': 1 }, { sparse: true })
 
 export const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema)
