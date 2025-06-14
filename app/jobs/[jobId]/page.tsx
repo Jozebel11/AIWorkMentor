@@ -4,7 +4,7 @@ import { JobController } from "@/lib/controllers/JobController"
 import JobDetailsView from "@/components/views/JobDetailsView"
 
 export async function generateStaticParams() {
-  const jobs = getAllJobs()
+  const jobs = await getAllJobs()
   return jobs.map((job) => ({
     jobId: job.id,
   }))

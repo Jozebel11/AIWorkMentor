@@ -4,7 +4,7 @@ import { ToolController } from "@/lib/controllers/ToolController"
 import ToolDetailsView from "@/components/views/ToolDetailsView"
 
 export async function generateStaticParams() {
-  const tools = getAllTools()
+  const tools = await getAllTools()
   return tools.map((tool) => ({
     toolId: tool.id,
   }))

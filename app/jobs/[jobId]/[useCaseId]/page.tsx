@@ -5,11 +5,11 @@ import { UseCaseController } from "@/lib/controllers/UseCaseController"
 import UseCaseDetailsView from "@/components/views/UseCaseDetailsView"
 
 export async function generateStaticParams() {
-  const jobs = getAllJobs()
+  const jobs = await getAllJobs()
   const params = []
   
   for (const job of jobs) {
-    const useCases = getUseCasesByJobId(job.id)
+    const useCases = await getUseCasesByJobId(job.id)
     for (const useCase of useCases) {
       params.push({
         jobId: job.id,
